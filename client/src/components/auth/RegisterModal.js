@@ -33,13 +33,20 @@ class RegisterModal extends Component {
 	};
 
 	componentDidUpdate(prevProps) {
-		const { error } = this.props;
+		const { error, isAuthenticated } = this.props;
 		if (error !== prevProps.error) {
 			// Check for register error
 			if (error.id === "REGISTER_FAIL") {
 				this.setState({ msg: error.msg.msg });
 			} else {
 				this.setState({ msg: null });
+			}
+		}
+
+		// If authenticated, close modal
+		if (this.state.modal) {
+			if (isAuthenticated) {
+				this.toggle();
 			}
 		}
 	}
@@ -79,8 +86,8 @@ class RegisterModal extends Component {
 					Register
 				</NavLink>
 
-				<Modal isOpen={this.state.modal} toggle={this.toogle}>
-					<ModalHeader toggle={this.toogle}>Register</ModalHeader>
+				<Modal isOpen={this.state.modal} toggle={this.toggle}>
+					<ModalHeader toggle={this.toggle}>Register</ModalHeader>
 					<ModalBody>
 						{this.state.msg ? (
 							<Alert color="danger">{this.state.msg}</Alert>
@@ -96,6 +103,7 @@ class RegisterModal extends Component {
 									className="mb-3"
 									onChange={this.onChange}
 								/>
+
 								<Label for="email">Email</Label>
 								<Input
 									type="email"
@@ -105,9 +113,10 @@ class RegisterModal extends Component {
 									className="mb-3"
 									onChange={this.onChange}
 								/>
+
 								<Label for="password">Password</Label>
 								<Input
-									type="text"
+									type="password"
 									name="password"
 									id="password"
 									placeholder="Password"
